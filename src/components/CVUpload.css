@@ -1,0 +1,241 @@
+.cv-upload-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: var(--spacing-lg);
+}
+
+.cv-upload-modal {
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--glass-white);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-white-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.cv-upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--glass-white-strong);
+}
+
+.cv-upload-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  background: var(--glass-white-strong);
+  color: var(--text-primary);
+}
+
+.cv-upload-content {
+  padding: var(--spacing-lg);
+}
+
+.cv-description {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.cv-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.cv-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.cv-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.cv-input-wrapper {
+  position: relative;
+}
+
+.cv-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: var(--spacing-md);
+  background: var(--glass-white-strong);
+  border: 1px solid var(--glass-white-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.cv-textarea:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.cv-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.cv-character-count {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--spacing-xs);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.valid-icon {
+  color: var(--success);
+}
+
+.cv-file-upload {
+  margin-top: var(--spacing-sm);
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--glass-white-strong);
+  border: 1px solid var(--glass-white-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.file-upload-label:hover {
+  background: var(--glass-white);
+  border-color: var(--accent-cyan);
+  color: var(--text-primary);
+}
+
+.file-input {
+  display: none;
+}
+
+.cv-requirements {
+  background: var(--glass-dark);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  border: 1px solid var(--glass-white-strong);
+}
+
+.cv-requirements h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cv-requirements ul {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.cv-requirements li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.cv-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--glass-white-strong);
+}
+
+.cv-actions .glass-button {
+  min-width: 120px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cv-upload-modal {
+    max-width: 100%;
+    margin: var(--spacing-md);
+  }
+  
+  .cv-upload-header {
+    padding: var(--spacing-md);
+  }
+  
+  .cv-upload-content {
+    padding: var(--spacing-md);
+  }
+  
+  .cv-actions {
+    flex-direction: column;
+  }
+  
+  .cv-actions .glass-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cv-upload-overlay {
+    padding: var(--spacing-sm);
+  }
+  
+  .cv-upload-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .cv-textarea {
+    min-height: 150px;
+  }
+} 

@@ -1,0 +1,323 @@
+.registration-card {
+  background: var(--glass-white);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-white-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  transition: all 0.3s ease;
+}
+
+.registration-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.registration-card.status-approved {
+  border-left: 4px solid var(--success);
+}
+
+.registration-card.status-rejected {
+  border-left: 4px solid var(--error);
+}
+
+.registration-card.status-pending {
+  border-left: 4px solid var(--warning);
+}
+
+.registration-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+}
+
+.student-avatar {
+  width: 48px;
+  height: 48px;
+  background: var(--glass-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  border: 2px solid var(--glass-white-strong);
+}
+
+.student-details {
+  flex: 1;
+}
+
+.student-name {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.student-email {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.registration-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  background: var(--glass-white-strong);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-icon {
+  flex-shrink: 0;
+}
+
+.status-icon.approved {
+  color: var(--success);
+}
+
+.status-icon.rejected {
+  color: var(--error);
+}
+
+.status-icon.pending {
+  color: var(--warning);
+}
+
+.status-text {
+  color: var(--text-primary);
+}
+
+.registration-meta {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--glass-dark);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-white-strong);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.cv-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.cv-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.cv-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cv-content {
+  background: var(--glass-dark);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--glass-white-strong);
+}
+
+.cv-content p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+.teacher-notes {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--glass-dark);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-white-strong);
+}
+
+.notes-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.notes-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.teacher-notes p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.approval-actions {
+  border-top: 1px solid var(--glass-white-strong);
+  padding-top: var(--spacing-md);
+}
+
+.notes-toggle {
+  margin-bottom: var(--spacing-md);
+}
+
+.notes-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.notes-toggle-btn:hover {
+  background: var(--glass-white-strong);
+  color: var(--text-primary);
+}
+
+.notes-input {
+  margin-bottom: var(--spacing-md);
+}
+
+.notes-textarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  background: var(--glass-white-strong);
+  border: 1px solid var(--glass-white-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.notes-textarea:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.notes-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+}
+
+.action-buttons .glass-button {
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.glass-button.reject {
+  background: linear-gradient(135deg, var(--error), #ff6b6b);
+  border-color: var(--error);
+}
+
+.glass-button.reject:hover {
+  background: linear-gradient(135deg, #ff6b6b, var(--error));
+  transform: translateY(-1px);
+}
+
+.glass-button.approve {
+  background: linear-gradient(135deg, var(--success), #51cf66);
+  border-color: var(--success);
+}
+
+.glass-button.approve:hover {
+  background: linear-gradient(135deg, #51cf66, var(--success));
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .registration-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+  }
+  
+  .registration-status {
+    align-self: flex-start;
+  }
+  
+  .registration-meta {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-buttons .glass-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .student-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .cv-content {
+    padding: var(--spacing-sm);
+  }
+  
+  .teacher-notes {
+    padding: var(--spacing-sm);
+  }
+} 
