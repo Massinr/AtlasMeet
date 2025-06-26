@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/AtlasMeet/static/css/main.afcc2012.css",
-    "main.js": "/AtlasMeet/static/js/main.4995257c.js",
+    "main.js": "/AtlasMeet/static/js/main.ab5ab433.js",
     "index.html": "/AtlasMeet/index.html",
     "main.afcc2012.css.map": "/AtlasMeet/static/css/main.afcc2012.css.map",
-    "main.4995257c.js.map": "/AtlasMeet/static/js/main.4995257c.js.map"
+    "main.ab5ab433.js.map": "/AtlasMeet/static/js/main.ab5ab433.js.map"
   },
   "entrypoints": [
     "static/css/main.afcc2012.css",
-    "static/js/main.4995257c.js"
+    "static/js/main.ab5ab433.js"
   ]
 }
