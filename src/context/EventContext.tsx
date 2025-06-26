@@ -258,34 +258,56 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     const savedEvents = localStorage.getItem('atlasmeet_events');
     const savedRegistrations = localStorage.getItem('atlasmeet_registrations');
     
-    if (savedEvents) {
-      try {
+    // Check if we're in production and localStorage is available
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isLocalStorageAvailable = typeof window !== 'undefined' && window.localStorage;
+    
+    try {
+      if (savedEvents && isLocalStorageAvailable) {
         const parsedEvents = JSON.parse(savedEvents);
         setEvents(parsedEvents);
-      } catch (error) {
-        console.error('Error parsing saved events:', error);
+      } else {
+        // Initialize with sample data
+        const sampleEvents = getSampleEvents();
+        setEvents(sampleEvents);
+        if (isLocalStorageAvailable) {
+          localStorage.setItem('atlasmeet_events', JSON.stringify(sampleEvents));
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing saved events:', error);
+      // Clear corrupted data and initialize with sample data
+      if (isLocalStorageAvailable) {
         localStorage.removeItem('atlasmeet_events');
       }
-    } else {
-      // Initialize with sample data if no saved data exists
-      const sampleEvents = getSampleEvents();
-      setEvents(sampleEvents);
-      localStorage.setItem('atlasmeet_events', JSON.stringify(sampleEvents));
+      setEvents(getSampleEvents());
+      if (isLocalStorageAvailable) {
+        localStorage.setItem('atlasmeet_events', JSON.stringify(getSampleEvents()));
+      }
     }
     
-    if (savedRegistrations) {
-      try {
+    try {
+      if (savedRegistrations && isLocalStorageAvailable) {
         const parsedRegistrations = JSON.parse(savedRegistrations);
         setRegistrations(parsedRegistrations);
-      } catch (error) {
-        console.error('Error parsing saved registrations:', error);
+      } else {
+        // Initialize with sample data
+        const sampleRegistrations = getSampleRegistrations();
+        setRegistrations(sampleRegistrations);
+        if (isLocalStorageAvailable) {
+          localStorage.setItem('atlasmeet_registrations', JSON.stringify(sampleRegistrations));
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing saved registrations:', error);
+      // Clear corrupted data and initialize with sample data
+      if (isLocalStorageAvailable) {
         localStorage.removeItem('atlasmeet_registrations');
       }
-    } else {
-      // Initialize with sample registrations if no saved data exists
-      const sampleRegistrations = getSampleRegistrations();
-      setRegistrations(sampleRegistrations);
-      localStorage.setItem('atlasmeet_registrations', JSON.stringify(sampleRegistrations));
+      setRegistrations(getSampleRegistrations());
+      if (isLocalStorageAvailable) {
+        localStorage.setItem('atlasmeet_registrations', JSON.stringify(getSampleRegistrations()));
+      }
     }
     
     setIsLoading(false);
@@ -293,14 +315,24 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
 
   // Save to localStorage whenever data changes
   useEffect(() => {
-    if (events.length > 0 || localStorage.getItem('atlasmeet_events')) {
-      localStorage.setItem('atlasmeet_events', JSON.stringify(events));
+    const isLocalStorageAvailable = typeof window !== 'undefined' && window.localStorage;
+    if ((events.length > 0 || localStorage.getItem('atlasmeet_events')) && isLocalStorageAvailable) {
+      try {
+        localStorage.setItem('atlasmeet_events', JSON.stringify(events));
+      } catch (error) {
+        console.error('Error saving events to localStorage:', error);
+      }
     }
   }, [events]);
 
   useEffect(() => {
-    if (registrations.length > 0 || localStorage.getItem('atlasmeet_registrations')) {
-      localStorage.setItem('atlasmeet_registrations', JSON.stringify(registrations));
+    const isLocalStorageAvailable = typeof window !== 'undefined' && window.localStorage;
+    if ((registrations.length > 0 || localStorage.getItem('atlasmeet_registrations')) && isLocalStorageAvailable) {
+      try {
+        localStorage.setItem('atlasmeet_registrations', JSON.stringify(registrations));
+      } catch (error) {
+        console.error('Error saving registrations to localStorage:', error);
+      }
     }
   }, [registrations]);
 

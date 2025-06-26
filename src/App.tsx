@@ -16,7 +16,6 @@ import Hero from './pages/Hero';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import PendingApproval from './pages/PendingApproval';
-import AdminTest from './pages/AdminTest';
 import TeacherDashboard from './pages/TeacherDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import EventForm from './pages/EventForm';
@@ -90,7 +89,6 @@ const AppContent: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/pending-approval" element={<PendingApproval />} />
-        <Route path="/admin" element={<AdminTest />} />
         
         {/* Protected Routes with Layout */}
         <Route path="/dashboard" element={<Layout />}>
