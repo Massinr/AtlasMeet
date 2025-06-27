@@ -52,6 +52,8 @@ interface EventContextType {
   getEventsByTeacherId: (teacherId: string) => Event[];
   getRegistrationsByStudentId: (studentId: string) => Registration[];
   searchEvents: (query: string, filters?: { category?: string; location?: string; teacherName?: string }) => Event[];
+  updateTeacherProfilePicture: (teacherId: string, profilePicture: string) => void;
+  removeTeacherProfilePicture: (teacherId: string) => void;
   isLoading: boolean;
 }
 
@@ -608,6 +610,18 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     });
   };
 
+  const updateTeacherProfilePicture = (teacherId: string, profilePicture: string) => {
+    setEvents(prev => prev.map(event => 
+      event.teacherId === teacherId ? { ...event, teacherProfilePicture: profilePicture } : event
+    ));
+  };
+
+  const removeTeacherProfilePicture = (teacherId: string) => {
+    setEvents(prev => prev.map(event => 
+      event.teacherId === teacherId ? { ...event, teacherProfilePicture: undefined } : event
+    ));
+  };
+
   const value: EventContextType = {
     events,
     registrations,
@@ -625,6 +639,8 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     getEventsByTeacherId,
     getRegistrationsByStudentId,
     searchEvents,
+    updateTeacherProfilePicture,
+    removeTeacherProfilePicture,
     isLoading,
   };
 

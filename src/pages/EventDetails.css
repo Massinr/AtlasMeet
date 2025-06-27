@@ -148,6 +148,17 @@
   font-weight: 500;
 }
 
+.teacher-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.teacher-info span {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
 /* Meeting Link Section */
 .meeting-link-section {
   padding: var(--spacing-xl);

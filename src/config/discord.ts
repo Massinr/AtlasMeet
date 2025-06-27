@@ -47,6 +47,7 @@ export const DISCORD_EMOJIS = {
   PENDING: '⏳',
   APPROVE: '👍',
   DENY: '👎',
+  WEBSITE: '🌐',
 };
 
 // Activity types that will be logged
@@ -60,6 +61,7 @@ export const ACTIVITY_TYPES = {
   EVENT_REGISTRATION: 'event_registration',
   APPLICATION_APPROVED: 'application_approved',
   APPLICATION_REJECTED: 'application_rejected',
+  WEBSITE_VISIT: 'website_visit',
 } as const;
 
 export type ActivityType = typeof ACTIVITY_TYPES[keyof typeof ACTIVITY_TYPES]; 

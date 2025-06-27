@@ -2,6 +2,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { EventProvider } from './context/EventContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { AlertManagerProvider } from './components/AlertManager';
@@ -23,6 +24,7 @@ import EventDetails from './pages/EventDetails';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import './styles/globals.css';
+import { discordLogger } from './services/DiscordLogger';
 
 // Protected Route Component
 interface ProtectedRouteProps {
@@ -41,14 +43,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
     return <Navigate to="/login" replace />;
   }
 
+  // DISABLED: Approval checks disabled for testing
   // Check approval status - only teachers need approval
-  if (user.role === 'teacher' && user.approvalStatus === 'pending') {
-    return <Navigate to="/pending-approval" replace />;
-  }
+  // if (user.role === 'teacher' && user.approvalStatus === 'pending') {
+  //   return <Navigate to="/pending-approval" replace />;
+  // }
 
-  if (user.approvalStatus === 'denied') {
-    return <Navigate to="/" replace />;
-  }
+  // if (user.approvalStatus === 'denied') {
+  //   return <Navigate to="/" replace />;
+  // }
 
   if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/" replace />;
@@ -61,6 +64,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
 const AppContent: React.FC = () => {
   const { getAllAccounts } = useAuth();
   const [showAccountsPopup, setShowAccountsPopup] = useState(false);
+
+  // Log website visit on first load
+  useEffect(() => {
+    discordLogger.logWebsiteVisit({
+      ip: 'N/A', // Can't get real IP from client-side JS
+      userAgent: navigator.userAgent,
+      referrer: document.referrer,
+      timestamp: new Date().toISOString(),
+    });
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -158,17 +171,19 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <AuthProvider>
         <ThemeProvider>
-          <NotificationProvider>
-            <EventProvider>
-              <AlertManagerProvider>
-                <PromptManager>
-                  <Suspense fallback={<LoadingSpinner fullScreen text="Loading AtlasMeet..." />}>
-                    <AppContent />
-                  </Suspense>
-                </PromptManager>
-              </AlertManagerProvider>
-            </EventProvider>
-          </NotificationProvider>
+          <LanguageProvider>
+            <NotificationProvider>
+              <EventProvider>
+                <AlertManagerProvider>
+                  <PromptManager>
+                    <Suspense fallback={<LoadingSpinner fullScreen text="Loading AtlasMeet..." />}>
+                      <AppContent />
+                    </Suspense>
+                  </PromptManager>
+                </AlertManagerProvider>
+              </EventProvider>
+            </NotificationProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </AuthProvider>
     </ErrorBoundary>

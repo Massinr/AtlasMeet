@@ -127,6 +127,8 @@ class DiscordLogger {
         return DISCORD_COLORS.WARNING;
       case ACTIVITY_TYPES.EVENT_DELETED:
         return DISCORD_COLORS.ORANGE;
+      case ACTIVITY_TYPES.WEBSITE_VISIT:
+        return DISCORD_COLORS.INFO;
       default:
         return DISCORD_COLORS.NEUTRAL;
     }
@@ -152,6 +154,8 @@ class DiscordLogger {
         return DISCORD_EMOJIS.EVENT;
       case ACTIVITY_TYPES.EVENT_DELETED:
         return DISCORD_EMOJIS.DELETE;
+      case ACTIVITY_TYPES.WEBSITE_VISIT:
+        return DISCORD_EMOJIS.WEBSITE;
       default:
         return DISCORD_EMOJIS.LOG;
     }
@@ -177,6 +181,8 @@ class DiscordLogger {
         return 'Event Created';
       case ACTIVITY_TYPES.EVENT_DELETED:
         return 'Event Deleted';
+      case ACTIVITY_TYPES.WEBSITE_VISIT:
+        return 'Website Visit';
       default:
         return 'Activity Log';
     }
@@ -545,6 +551,41 @@ class DiscordLogger {
         timestamp: new Date().toISOString(),
       },
     });
+  }
+
+  async logWebsiteVisit(data: {
+    ip?: string;
+    userAgent?: string;
+    referrer?: string;
+    timestamp: string;
+  }) {
+    const embed = {
+      title: `${this.getActionEmoji(ACTIVITY_TYPES.WEBSITE_VISIT)} Website Visit`,
+      color: this.getEmbedColor(ACTIVITY_TYPES.WEBSITE_VISIT),
+      timestamp: data.timestamp,
+      fields: [
+        {
+          name: 'IP Address',
+          value: data.ip || 'Unknown',
+          inline: true,
+        },
+        {
+          name: 'User Agent',
+          value: data.userAgent || 'Unknown',
+          inline: false,
+        },
+        {
+          name: 'Referrer',
+          value: data.referrer || 'Direct/Unknown',
+          inline: false,
+        },
+      ],
+      footer: {
+        text: 'AtlasMeet Website Visit Log',
+        icon_url: 'https://cdn.discordapp.com/embed/avatars/0.png',
+      },
+    };
+    await this.sendDiscordMessage(embed);
   }
 }
 

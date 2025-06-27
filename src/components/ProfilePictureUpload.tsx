@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Camera, Upload, X, User, Check, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useEvents } from '../context/EventContext';
 import './ProfilePictureUpload.css';
 
 interface ProfilePictureUploadProps {
@@ -10,6 +11,7 @@ interface ProfilePictureUploadProps {
 
 const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ onClose, showModal = false }) => {
   const { user, updateProfilePicture, removeProfilePicture } = useAuth();
+  const { updateTeacherProfilePicture, removeTeacherProfilePicture } = useEvents();
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -75,6 +77,10 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ onClose, sh
     try {
       const success = await updateProfilePicture(preview);
       if (success) {
+        // Update teacher profile picture in events if user is a teacher
+        if (user?.role === 'teacher') {
+          updateTeacherProfilePicture(user.id, preview);
+        }
         setPreview(null);
         onClose?.();
       } else {
@@ -94,6 +100,10 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ onClose, sh
     try {
       const success = await removeProfilePicture();
       if (success) {
+        // Remove teacher profile picture from events if user is a teacher
+        if (user?.role === 'teacher') {
+          removeTeacherProfilePicture(user.id);
+        }
         setPreview(null);
         onClose?.();
       } else {

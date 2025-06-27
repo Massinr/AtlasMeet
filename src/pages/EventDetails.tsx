@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useEvents } from '../context/EventContext';
 import { useAlertManager } from '../components/AlertManager';
 import CVUpload from '../components/CVUpload';
+import ProfilePicture from '../components/ProfilePicture';
 import { 
   Calendar, 
   Clock, 
@@ -219,7 +220,14 @@ const EventDetails: React.FC = () => {
                 <User className="info-icon" />
                 <div className="info-content">
                   <label>Organizer</label>
-                  <span>{event.teacherName}</span>
+                  <div className="teacher-info">
+                    <ProfilePicture 
+                      src={event.teacherProfilePicture}
+                      name={event.teacherName}
+                      size="sm"
+                    />
+                    <span>{event.teacherName}</span>
+                  </div>
                 </div>
               </div>
 

@@ -152,9 +152,8 @@ const DEV_PASSWORD = 'DEVELOPPER_CREDENTIALS_PASSWORD';
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [sampleUsers] = useState<User[]>(getSampleUsers());
   const [createdAccounts, setCreatedAccounts] = useState<CreatedAccount[]>(getCreatedAccountsFromStorage());
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Check for existing user in localStorage
@@ -231,9 +230,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
       
       if (createdAccount) {
+        // DISABLED: All accounts can login immediately for testing
         // For students, they can login immediately (auto-approved)
         // For teachers, they need to be approved
-        if (createdAccount.role === 'student' || createdAccount.isApproved) {
+        // if (createdAccount.role === 'student' || createdAccount.isApproved) {
           const user: User = {
             id: createdAccount.id,
             name: createdAccount.name,
@@ -242,18 +242,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             createdAt: createdAccount.createdAt,
             websiteId: createdAccount.websiteId,
             profilePicture: createdAccount.profilePicture,
-            isApproved: createdAccount.isApproved,
-            approvalStatus: createdAccount.approvalStatus,
+            isApproved: true, // Force approval for testing
+            approvalStatus: 'approved', // Force approval for testing
           };
           setUser(user);
           localStorage.setItem('atlasmeet_user', JSON.stringify(user));
           setIsLoading(false);
           return true;
-        } else {
-          // Teacher account not approved yet
-          setIsLoading(false);
-          return false;
-        }
+        // } else {
+        //   // Teacher account not approved yet
+        //   setIsLoading(false);
+        //   return false;
+        // }
       }
       
       setIsLoading(false);
@@ -288,9 +288,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         createdAt: new Date().toISOString(),
         websiteId: generateWebsiteId(),
         isCreated: true,
-        // Only teachers need approval, students are auto-approved
-        isApproved: role === 'student',
-        approvalStatus: role === 'student' ? 'approved' : 'pending',
+        // DISABLED: All accounts are auto-approved for testing
+        isApproved: true,
+        approvalStatus: 'approved',
       };
       
       setCreatedAccounts(prev => [...prev, newAccount]);
@@ -304,16 +304,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         websiteId: newAccount.websiteId,
       });
       
+      // DISABLED: Approval requests disabled for testing
       // If it's a teacher, send approval request to Discord
-      if (role === 'teacher') {
-        await discordBot.sendApprovalRequest(
-          newAccount.id,
-          newAccount.name,
-          newAccount.email,
-          newAccount.role,
-          newAccount.websiteId
-        );
-      }
+      // if (role === 'teacher') {
+      //   await discordBot.sendApprovalRequest(
+      //     newAccount.id,
+      //     newAccount.name,
+      //     newAccount.email,
+      //     newAccount.role,
+      //     newAccount.websiteId
+      //   );
+      // }
       
       // Auto-login the user after successful registration
       const user: User = {

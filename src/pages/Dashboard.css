@@ -132,14 +132,34 @@
   pointer-events: none;
 }
 
-.search-box .glass-input {
+.search-box .glass-input,
+.filter-box .glass-input {
+  padding: var(--spacing-md) var(--spacing-lg);
   padding-left: calc(var(--spacing-md) + 20px + var(--spacing-sm));
   width: 100%;
+  background: var(--glass-white);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-white-strong);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  min-height: 48px;
 }
 
-.filter-box .glass-input {
-  padding-left: calc(var(--spacing-md) + 20px + var(--spacing-sm));
-  width: 100%;
+.search-box .glass-input:focus,
+.filter-box .glass-input:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+  background: var(--glass-white-strong);
+}
+
+.search-box .glass-input::placeholder,
+.filter-box .glass-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
 }
 
 /* Enhanced Search Styles */
@@ -170,14 +190,19 @@
   transition: all 0.3s ease;
   font-size: 0.875rem;
   font-weight: 500;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-filter-tab:hover {
   color: var(--text-primary);
+  background: var(--glass-white-strong);
 }
 
 .search-filter-tab.active {
-  background: var(--accent-cyan);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
   color: var(--primary-dark);
   box-shadow: var(--shadow-glow);
 }
@@ -186,6 +211,7 @@
   color: var(--text-muted);
   font-size: 0.875rem;
   margin-top: var(--spacing-xs);
+  text-align: center;
 }
 
 /* Teacher Profile Picture in Event Cards */
@@ -481,6 +507,7 @@
   
   .stats-overview {
     grid-template-columns: 1fr;
+    gap: var(--spacing-md);
   }
   
   .stat-card {
@@ -497,15 +524,55 @@
   
   .dashboard-tabs {
     flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .tab-button {
+    justify-content: center;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    min-height: 48px;
   }
   
   .search-filter-section {
     flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .search-box .glass-input,
+  .filter-box .glass-input {
+    min-height: 52px;
+    font-size: 1rem;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    padding-left: calc(var(--spacing-lg) + 20px + var(--spacing-sm));
+  }
+  
+  .search-icon,
+  .filter-icon {
+    left: var(--spacing-lg);
+    width: 22px;
+    height: 22px;
+  }
+  
+  .search-filter-options {
+    justify-content: center;
+  }
+  
+  .search-filter-tabs {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .search-filter-tab {
+    flex: 1;
+    min-height: 44px;
+    font-size: 0.9rem;
+    padding: var(--spacing-md) var(--spacing-lg);
   }
   
   .event-header {
     flex-direction: column;
-    gap: var(--spacing-md);
+    align-items: flex-start;
+    gap: var(--spacing-sm);
   }
   
   .event-actions {
@@ -513,19 +580,21 @@
   }
   
   .event-footer {
-    justify-content: center;
+    flex-direction: column;
+    gap: var(--spacing-sm);
   }
   
   .empty-state {
     padding: var(--spacing-2xl);
+    text-align: center;
   }
 }
 
 @media (max-width: 480px) {
   .stat-card {
-    padding: var(--spacing-md);
     flex-direction: column;
     text-align: center;
+    gap: var(--spacing-md);
   }
   
   .stat-icon {
@@ -551,13 +620,39 @@
   }
   
   .info-item {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
   }
   
   .registration-info {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-xs);
+  }
+  
+  .search-box .glass-input,
+  .filter-box .glass-input {
+    min-height: 56px;
+    font-size: 1.1rem;
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    padding-left: calc(var(--spacing-xl) + 24px + var(--spacing-sm));
+  }
+  
+  .search-icon,
+  .filter-icon {
+    left: var(--spacing-xl);
+    width: 24px;
+    height: 24px;
+  }
+  
+  .search-filter-tab {
+    min-height: 48px;
+    font-size: 0.95rem;
+    padding: var(--spacing-lg) var(--spacing-xl);
+  }
+  
+  .search-placeholder {
+    font-size: 0.9rem;
+    margin-top: var(--spacing-sm);
   }
 }
 

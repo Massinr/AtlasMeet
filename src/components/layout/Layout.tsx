@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ProfilePicture from '../ProfilePicture';
 import { 
   Calendar, 
   Users, 
@@ -116,9 +117,11 @@ const Layout: React.FC = () => {
         </div>
 
         <div className="sidebar-user">
-          <div className="user-avatar">
-            {user.name.charAt(0).toUpperCase()}
-          </div>
+          <ProfilePicture 
+            src={user.profilePicture}
+            name={user.name}
+            size="md"
+          />
           <div className="user-info">
             <div className="user-name">{user.name}</div>
             <div className="user-role">{user.role}</div>

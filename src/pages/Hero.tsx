@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Users, BookOpen, Sparkles, Clock, MapPin, ArrowRight, ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
+import { Calendar, Users, BookOpen, Sparkles, Clock, MapPin, ArrowRight, ArrowLeft, CheckCircle, XCircle, Info, Heart, ExternalLink, Globe, Menu, X } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import KeyboardShortcuts from '../components/KeyboardShortcuts';
+import AccountsPopup from '../components/AccountsPopup';
+import { useAuth } from '../context/AuthContext';
 import './Hero.css';
 
 // Mock events for landing page (no real data for security)
@@ -110,7 +114,18 @@ const mockPastEvents = [
 
 const Hero: React.FC = () => {
   const navigate = useNavigate();
+  const { t, language, setLanguage } = useLanguage();
+  const { getAllAccounts } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showUpdates, setShowUpdates] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showAccountsPopup, setShowAccountsPopup] = useState(false);
+
+  const handleQuickLogin = () => {
+    setShowAccountsPopup(true);
+  };
 
   // Auto-rotate past events slideshow
   useEffect(() => {
@@ -122,6 +137,7 @@ const Hero: React.FC = () => {
 
   const handleRoleSelect = (role: 'teacher' | 'student') => {
     navigate('/register', { state: { role } });
+    setIsMobileMenuOpen(false);
   };
 
   const nextSlide = () => {
@@ -133,7 +149,7 @@ const Hero: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
@@ -142,6 +158,45 @@ const Hero: React.FC = () => {
 
   const formatTime = (timeString: string) => {
     return timeString;
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'fr' : 'en');
+    setShowLanguageMenu(false);
+  };
+
+  // Close language menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showLanguageMenu && !target.closest('.language-switcher')) {
+        setShowLanguageMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showLanguageMenu]);
+
+  const handleMobileMenuAction = (action: string) => {
+    setIsMobileMenuOpen(false);
+    switch (action) {
+      case 'updates':
+        setShowUpdates(true);
+        break;
+      case 'credits':
+        setShowCredits(true);
+        break;
+      case 'signin':
+        handleQuickLogin();
+        break;
+      case 'teacher':
+        handleRoleSelect('teacher');
+        break;
+      case 'student':
+        handleRoleSelect('student');
+        break;
+    }
   };
 
   return (
@@ -166,29 +221,173 @@ const Hero: React.FC = () => {
               <Sparkles className="logo-icon" />
               <span className="logo-text">AtlasMeet</span>
             </div>
-            <div className="nav-actions">
+            
+            {/* Desktop Navigation */}
+            <div className="nav-actions desktop-only">
+              <div className="language-switcher">
+                <button 
+                  className="glass-button secondary language-button"
+                  onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                >
+                  <Globe size={16} />
+                  {language === 'en' ? 'EN' : 'FR'}
+                </button>
+                {showLanguageMenu && (
+                  <div className="language-menu glass-card">
+                    <button 
+                      className={`language-option ${language === 'en' ? 'active' : ''}`}
+                      onClick={() => setLanguage('en')}
+                    >
+                      🇺🇸 English
+                    </button>
+                    <button 
+                      className={`language-option ${language === 'fr' ? 'active' : ''}`}
+                      onClick={() => setLanguage('fr')}
+                    >
+                      🇫🇷 Français
+                    </button>
+                  </div>
+                )}
+              </div>
+              <button 
+                className="glass-button secondary"
+                onClick={() => setShowUpdates(true)}
+              >
+                <Info size={16} />
+                {t('nav.updates')}
+              </button>
+              <button 
+                className="glass-button secondary"
+                onClick={() => setShowCredits(true)}
+              >
+                <Heart size={16} />
+                {t('nav.credits')}
+              </button>
               <button 
                 className="glass-button"
-                onClick={() => navigate('/login')}
+                onClick={handleQuickLogin}
               >
-                Sign In
+                {t('nav.signIn')}
               </button>
             </div>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="mobile-menu-toggle mobile-only"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="mobile-menu-overlay"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu glass ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-menu-header">
+          <div className="mobile-menu-logo">
+            <Sparkles className="logo-icon" />
+            <span className="logo-text">AtlasMeet</span>
+          </div>
+          <button
+            className="mobile-menu-close"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <div className="mobile-menu-content">
+          <div className="mobile-menu-section">
+            <h3>Language</h3>
+            <div className="mobile-language-options">
+              <button 
+                className={`mobile-language-option ${language === 'en' ? 'active' : ''}`}
+                onClick={() => {
+                  setLanguage('en');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                🇺🇸 English
+              </button>
+              <button 
+                className={`mobile-language-option ${language === 'fr' ? 'active' : ''}`}
+                onClick={() => {
+                  setLanguage('fr');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                🇫🇷 Français
+              </button>
+            </div>
+          </div>
+
+          <div className="mobile-menu-section">
+            <h3>Actions</h3>
+            <button 
+              className="mobile-menu-item"
+              onClick={() => handleMobileMenuAction('updates')}
+            >
+              <Info size={20} />
+              <span>{t('nav.updates')}</span>
+            </button>
+            <button 
+              className="mobile-menu-item"
+              onClick={() => handleMobileMenuAction('credits')}
+            >
+              <Heart size={20} />
+              <span>{t('nav.credits')}</span>
+            </button>
+            <button 
+              className="mobile-menu-item quick-login"
+              onClick={handleQuickLogin}
+            >
+              <Users size={20} />
+              <span>Quick Login (Ctrl+H)</span>
+            </button>
+          </div>
+
+          <div className="mobile-menu-section">
+            <h3>Join AtlasMeet</h3>
+            <button 
+              className="mobile-menu-item primary"
+              onClick={() => handleMobileMenuAction('teacher')}
+            >
+              <BookOpen size={20} />
+              <span>{t('hero.teacherButton')}</span>
+            </button>
+            <button 
+              className="mobile-menu-item primary"
+              onClick={() => handleMobileMenuAction('student')}
+            >
+              <Users size={20} />
+              <span>{t('hero.studentButton')}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Accounts Popup (Quick Login) */}
+      <AccountsPopup isOpen={showAccountsPopup} onClose={() => setShowAccountsPopup(false)} accounts={getAllAccounts()} />
 
       {/* Hero Content */}
       <div className="hero-content">
         <div className="container">
           <div className="hero-text fade-in">
             <h1 className="hero-title">
-              AtlasMeet
-              <span className="hero-subtitle">Where Learning Meets Opportunity</span>
+              {t('hero.title')}
+              <span className="hero-subtitle">{t('hero.subtitle')}</span>
             </h1>
             <p className="hero-description">
-              Connect teachers with students through seamless event management. 
-              Create, discover, and join educational events that inspire growth and learning.
+              {t('hero.description')}
             </p>
             
             <div className="hero-actions">
@@ -197,14 +396,14 @@ const Hero: React.FC = () => {
                 onClick={() => handleRoleSelect('teacher')}
               >
                 <BookOpen size={20} />
-                I'm a Teacher
+                {t('hero.teacherButton')}
               </button>
               <button 
                 className="glass-button"
                 onClick={() => handleRoleSelect('student')}
               >
                 <Users size={20} />
-                I'm a Student
+                {t('hero.studentButton')}
               </button>
             </div>
           </div>
@@ -213,14 +412,14 @@ const Hero: React.FC = () => {
           <div className="current-events-section fade-in" style={{ animationDelay: '0.3s' }}>
             <h2 className="section-title">
               <Calendar className="section-icon" />
-              Upcoming Events
+              {t('events.upcoming')}
             </h2>
             <div className="events-grid">
               {mockCurrentEvents.map((event) => (
                 <div key={event.id} className="event-card glass-card" onClick={() => navigate('/register', { state: { role: 'student' } })}>
                   <div className="event-header">
                     <span className="event-category">{event.category}</span>
-                    <span className="event-status active">Active</span>
+                    <span className="event-status active">{t('events.active')}</span>
                   </div>
                   <h3 className="event-title">{event.title}</h3>
                   <p className="event-description">{event.description.substring(0, 100)}...</p>
@@ -231,15 +430,15 @@ const Hero: React.FC = () => {
                     </div>
                     <div className="event-info">
                       <MapPin size={16} />
-                      <span>{event.isVirtual ? 'Virtual Event' : event.location}</span>
+                      <span>{event.isVirtual ? t('events.virtual') : event.location}</span>
                     </div>
                     <div className="event-info">
                       <Users size={16} />
-                      <span>{event.registeredCount}/{event.capacity} registered</span>
+                      <span>{event.registeredCount}/{event.capacity} {t('events.registered')}</span>
                     </div>
                   </div>
                   <div className="event-teacher">
-                    <span>by {event.teacherName}</span>
+                    <span>{t('events.by')} {event.teacherName}</span>
                   </div>
                 </div>
               ))}
@@ -249,7 +448,7 @@ const Hero: React.FC = () => {
                 className="glass-button"
                 onClick={() => navigate('/register', { state: { role: 'student' } })}
               >
-                Join AtlasMeet to View All Events
+                {t('events.viewAll')}
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -259,7 +458,7 @@ const Hero: React.FC = () => {
           <div className="past-events-section fade-in" style={{ animationDelay: '0.5s' }}>
             <h2 className="section-title">
               <CheckCircle className="section-icon" />
-              Recently Completed Events
+              {t('events.recentlyCompleted')}
             </h2>
             <div className="slideshow-container">
               <button className="slideshow-nav prev" onClick={prevSlide}>
@@ -278,7 +477,7 @@ const Hero: React.FC = () => {
                         <span className="event-category">{event.category}</span>
                         <span className="event-status completed">
                           <CheckCircle size={16} />
-                          Completed
+                          {t('events.completed')}
                         </span>
                       </div>
                       <h3 className="event-title">{event.title}</h3>
@@ -290,15 +489,15 @@ const Hero: React.FC = () => {
                         </div>
                         <div className="event-info">
                           <MapPin size={16} />
-                          <span>{event.isVirtual ? 'Virtual Event' : event.location}</span>
+                          <span>{event.isVirtual ? t('events.virtual') : event.location}</span>
                         </div>
                         <div className="event-info">
                           <Users size={16} />
-                          <span>{event.registeredCount}/{event.capacity} participants</span>
+                          <span>{event.registeredCount}/{event.capacity} {t('events.participants')}</span>
                         </div>
                       </div>
                       <div className="event-teacher">
-                        <span>by {event.teacherName}</span>
+                        <span>{t('events.by')} {event.teacherName}</span>
                       </div>
                     </div>
                   </div>
@@ -322,6 +521,147 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Updates Modal */}
+      {showUpdates && (
+        <div className="modal-overlay" onClick={() => setShowUpdates(false)}>
+          <div className="modal-content glass-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{t('modal.recentUpdates')}</h2>
+              <button className="modal-close" onClick={() => setShowUpdates(false)}>
+                <XCircle size={20} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="updates-list">
+                <div className="update-item">
+                  <div className="update-content">
+                    <h3>🎉 {t('updates.v1Released')}</h3>
+                    <p>{t('updates.v1Description')}</p>
+                  </div>
+                </div>
+                <div className="update-item">
+                  <div className="update-content">
+                    <h3>✨ {t('updates.newFeatures')}</h3>
+                    <ul>
+                      <li>Dark/Light mode toggle</li>
+                      <li>Profile picture upload</li>
+                      <li>Event search and filtering</li>
+                      <li>CV upload for applications</li>
+                      <li>Real-time notifications</li>
+                      <li>Mobile responsive design</li>
+                      <li>Beautiful intro animations</li>
+                      <li>Enhanced mobile menu</li>
+                      <li>Quick login (Ctrl+H)</li>
+                      <li>Website visit logging</li>
+                      <li>Improved search inputs</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="update-item">
+                  <div className="update-content">
+                    <h3>🎨 {t('updates.uiImprovements')}</h3>
+                    <ul>
+                      <li>Staggered intro animations</li>
+                      <li>Mobile menu with quick access</li>
+                      <li>Better touch targets for mobile</li>
+                      <li>Improved search input styling</li>
+                      <li>Enhanced mobile responsiveness</li>
+                      <li>Professional loading sequences</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="update-item">
+                  <div className="update-content">
+                    <h3>🔧 {t('updates.performance')}</h3>
+                    <p>{t('updates.performanceDescription')}</p>
+                  </div>
+                </div>
+                <div className="update-item">
+                  <div className="update-content">
+                    <h3>🌐 {t('updates.languageSupport')}</h3>
+                    <p>{t('updates.languageDescription')}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <a 
+                  href="https://www.instagram.com/massine.x_x/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="glass-button primary"
+                >
+                  <ExternalLink size={16} />
+                  {t('modal.followUpdates')}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Credits Modal */}
+      {showCredits && (
+        <div className="modal-overlay" onClick={() => setShowCredits(false)}>
+          <div className="modal-content glass-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{t('modal.credits')}</h2>
+              <button className="modal-close" onClick={() => setShowCredits(false)}>
+                <XCircle size={20} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="credits-content">
+                <div className="credit-section">
+                  <h3>👨‍💻 {t('credits.developer')}</h3>
+                  <p><strong>Massine</strong> - {t('credits.developerDescription')}</p>
+                  <a 
+                    href="https://www.instagram.com/massine.x_x/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="social-link"
+                  >
+                    <ExternalLink size={16} />
+                    @massine.x_x on Instagram
+                  </a>
+                </div>
+                
+                <div className="credit-section">
+                  <h3>🛠️ {t('credits.technologies')}</h3>
+                  <ul>
+                    <li><strong>Frontend:</strong> React, TypeScript, CSS3</li>
+                    <li><strong>Icons:</strong> Lucide React</li>
+                    <li><strong>Styling:</strong> Custom CSS with Glass Morphism</li>
+                    <li><strong>Deployment:</strong> GitHub Pages</li>
+                  </ul>
+                </div>
+                
+                <div className="credit-section">
+                  <h3>🎨 {t('credits.design')}</h3>
+                  <p>{t('credits.designDescription')}</p>
+                </div>
+                
+                <div className="credit-section">
+                  <h3>📱 {t('credits.connect')}</h3>
+                  <p>{t('credits.connectDescription')}</p>
+                  <a 
+                    href="https://www.instagram.com/massine.x_x/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="glass-button primary"
+                  >
+                    <ExternalLink size={16} />
+                    {t('modal.visitProfile')}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Keyboard Shortcuts */}
+      <KeyboardShortcuts onShowAccounts={handleQuickLogin} />
     </div>
   );
 };
